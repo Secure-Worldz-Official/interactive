@@ -78,42 +78,58 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
         }
 
         .modal-content {
-            background: #1a1a1a;
-            padding: 3rem;
-            border-radius: 32px;
-            max-width: 500px;
+            background: #111;
+            padding: 3.5rem;
+            border-radius: 40px;
+            max-width: 550px;
             width: 90%;
             text-align: center;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 0 40px rgba(255, 77, 77, 0.2);
-            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            box-shadow: 0 0 60px rgba(255, 77, 77, 0.15), 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
-        .modal-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 77, 77, 0.1);
+        .modal-header {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 800;
             color: var(--primary);
-            border-radius: 50%;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 2rem;
+            gap: 10px;
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transform: rotate(-5deg);
         }
 
         .question-text {
-            font-size: 1.25rem;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-            color: #eee;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            margin-bottom: 3rem;
+            color: #ffffff;
+            font-weight: 500;
         }
 
         .quiz-btns {
@@ -123,30 +139,33 @@
         }
 
         .quiz-btn {
-            padding: 1.2rem;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
             color: white;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .quiz-btn:hover {
-            background: var(--glass);
-            border-color: var(--primary);
-            transform: translateY(-2px);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .quiz-btn.true:hover {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.15);
             border-color: #00ff88;
+            color: #00ff88;
         }
 
         .quiz-btn.false:hover {
-            background: rgba(255, 77, 77, 0.1);
+            background: rgba(255, 77, 77, 0.15);
             border-color: var(--primary);
+            color: var(--primary);
         }
 
         .score-badge {
@@ -279,10 +298,12 @@
     <!-- Quiz Modal -->
     <div id="quiz-modal" class="quiz-modal">
         <div class="modal-content">
-            <div class="modal-icon">
-                <i data-lucide="help-circle" size="40"></i>
+            <div class="modal-header">
+                <i data-lucide="zap" size="16"></i> Interactive Checkpoint
             </div>
-            <h3 style="margin-bottom: 1rem; color: var(--primary);">Quick Quiz</h3>
+            <div class="modal-icon">
+                <i data-lucide="help-circle" size="36"></i>
+            </div>
             <p id="quiz-question" class="question-text">Question text goes here...</p>
             <div class="quiz-btns">
                 <button class="quiz-btn true" onclick="submitAnswer(true)">TRUE</button>
@@ -303,24 +324,33 @@
                 title: "Security and Compliance",
                 questions: [
                     { time: 300, text: "Security helps protect data and systems from unauthorized access, attacks, and threats.", answer: true, triggered: false },
-                    { time: 600, text: "Compliance means organizations must follow laws, regulations, and industry standards related to data protection.", answer: true, triggered: false },
-                    { time: 900, text: "Security and compliance are the same and have no differences.", answer: false, triggered: false }
+                    { time: 600, text: "Compliance means organizations must follow laws, regulations, and industry standards.", answer: true, triggered: false },
+                    { time: 900, text: "Security and compliance are exactly the same concept and have no differences.", answer: false, triggered: false },
+                    { time: 1200, text: "Multi-factor authentication (MFA) is a critical component of modern security identity management.", answer: true, triggered: false },
+                    { time: 1500, text: "Data encryption ensures that even if data is stolen, it remains unreadable without the key.", answer: true, triggered: false },
+                    { time: 1800, text: "A firewall is only useful for protecting against internal company threats, not external ones.", answer: false, triggered: false }
                 ]
             },
             'ready2/final_presentation.mp4': {
                 title: "Cost Function Optimization",
                 questions: [
-                    { time: 300, text: "A cost function is used to measure the error between predicted values and actual values in a machine learning model.", answer: true, triggered: false },
-                    { time: 600, text: "If the value of the cost function is high, it means the model is making very accurate predictions.", answer: false, triggered: false },
-                    { time: 900, text: "The main goal of cost function optimization is to minimize the error made by the machine learning model.", answer: true, triggered: false }
+                    { time: 300, text: "A cost function measures the discrepancy between predicted and actual values in a model.", answer: true, triggered: false },
+                    { time: 600, text: "A lower cost function value generally indicates a better performing model.", answer: true, triggered: false },
+                    { time: 900, text: "The primary purpose of Gradient Descent is to maximize the cost function error.", answer: false, triggered: false },
+                    { time: 1200, text: "The learning rate is a hyperparameter that controls how much the model weights are adjusted.", answer: true, triggered: false },
+                    { time: 1500, text: "Mean Squared Error (MSE) is a common cost function used for regression problems.", answer: true, triggered: false },
+                    { time: 1800, text: "Overfitting is more likely to occur if the cost function is not properly regularized.", answer: true, triggered: false }
                 ]
             },
             'ready3/final_presentation.mp4': {
                 title: "Hyperparameter Optimization",
                 questions: [
-                    { time: 300, text: "Hyperparameters are set before training the model.", answer: true, triggered: false },
-                    { time: 600, text: "Hyperparameters are automatically learned by the model during training.", answer: false, triggered: false },
-                    { time: 900, text: "Grid Search is a method used for hyperparameter optimization.", answer: true, triggered: false }
+                    { time: 300, text: "Hyperparameters are external configurations set before the training process begins.", answer: true, triggered: false },
+                    { time: 600, text: "Model parameters and hyperparameters are functionally identical and can be swapped.", answer: false, triggered: false },
+                    { time: 900, text: "Grid Search exhaustively searches through a manually specified subset of the hyperparameter space.", answer: true, triggered: false },
+                    { time: 1200, text: "Random Search is often more efficient than Grid Search for high-dimensional spaces.", answer: true, triggered: false },
+                    { time: 1500, text: "Bayesian Optimization builds a probabilistic model to find the minimum of an objective function.", answer: true, triggered: false },
+                    { time: 1800, text: "Automated Machine Learning (AutoML) seeks to automate the hyperparameter tuning process.", answer: true, triggered: false }
                 ]
             }
         };
@@ -335,8 +365,7 @@
 
         function startCourse(videoSrc) {
             activeCourse = courseData[videoSrc];
-            // Reset question triggers for this course if needed, but usually we want to keep state per session
-            // For now, let's just reset them so the user can re-watch and take quizzes again
+            // Reset triggers for a fresh session
             activeCourse.questions.forEach(q => q.triggered = false);
 
             document.getElementById('library-view').style.display = 'none';
@@ -357,16 +386,12 @@
         player.addEventListener('timeupdate', () => {
             if (!activeCourse) return;
 
-            const currentTime = Math.floor(player.currentTime);
-            const question = activeCourse.questions.find(q => q.time === currentTime && !q.triggered);
+            const currentTime = player.currentTime;
+            // Robust check: trigger if current time is past the target and not yet triggered
+            const question = activeCourse.questions.find(q => currentTime >= q.time && !q.triggered);
 
             if (question) {
                 player.pause();
-                // Ensure player doesn't seek forward while modal is open
-                if (player.requestPointerLock) {
-                    // Could potentially lock focus, but standard pause is enough for this requirement
-                }
-
                 question.triggered = true;
                 currentQuestion = question;
                 showQuiz(question.text);
@@ -384,9 +409,9 @@
 
             if (isCorrect) {
                 score += 10;
-                showResult("Congratulations!", "#00ff88");
+                showResult("Great Job! Correct Answer.", "#00ff88");
             } else {
-                showResult("Better luck next time!", "#ff4d4d");
+                showResult("Incorrect. Keep Learning!", "#ff4d4d");
             }
 
             updateScoreDisplay();
@@ -402,14 +427,21 @@
 
             setTimeout(() => {
                 overlay.style.display = 'none';
-            }, 2000);
+            }, 2500);
         }
 
         function updateScoreDisplay() {
             document.getElementById('current-score').textContent = score;
         }
 
-        // Prevent closing modal with Escape
+        // Force pause when modal is open to prevent bypassing
+        player.addEventListener('play', () => {
+            if (modal.style.display === 'flex') {
+                player.pause();
+            }
+        });
+
+        // Prevent closing modal with Escape to ensure interaction
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.style.display === 'flex') {
                 e.preventDefault();
