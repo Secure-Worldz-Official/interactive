@@ -4,57 +4,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Course Showcase</title>
+    <title>Interactive Learning Library</title>
     <link rel="stylesheet" href="gallery.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #ff4d4d;
+            --primary-dark: #cc0000;
+            --bg-dark: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --modal-bg: rgba(10, 10, 10, 0.95);
+        }
+
+        #player-view {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .back-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            background: black;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 3rem;
+            border-radius: 32px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 40px rgba(255, 77, 77, 0.2);
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            color: #eee;
+        }
+
+        .quiz-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .quiz-btn {
+            padding: 1.2rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--card-bg);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-btn:hover {
+            background: var(--glass);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .quiz-btn.true:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        .quiz-btn.false:hover {
+            background: rgba(255, 77, 77, 0.1);
+            border-color: var(--primary);
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, var(--primary), #a80000);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .result-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 2rem 4rem;
+            border-radius: 100px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            z-index: 10;
+            display: none;
+            backdrop-filter: blur(5px);
+            animation: popOut 1s forwards;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes popOut {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Course Library</h1>
-        <p class="subtitle">Experience immersive learning with interactive quizzes and high-fidelity video
-            presentations.</p>
-    </header>
+    <div id="library-view">
+        <header>
+            <h1>Course Library</h1>
+            <p class="subtitle">Experience immersive learning with interactive quizzes and high-fidelity video
+                presentations.</p>
+        </header>
 
-    <main class="video-grid">
-        <!-- Video 1 -->
-        <a href="ready1/final_presentation.mp4" class="video-card">
-            <span class="status-badge">Interactive</span>
-            <div class="icon-box">
-                <i data-lucide="shield-check"></i>
+        <main class="video-grid">
+            <!-- Video 1 -->
+            <div class="video-card" onclick="startCourse('ready1/final_presentation.mp4')">
+                <span class="status-badge">Interactive</span>
+                <div class="icon-box">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <h2 class="video-title">Security and Compliance</h2>
+                <p class="video-desc">Deep dive into enterprise security protocols, compliance standards, and modern
+                    digital
+                    asset protection.</p>
+                <div class="interactive-badge">Start Learning</div>
             </div>
-            <h2 class="video-title">Security and Compliance</h2>
-            <p class="video-desc">Deep dive into enterprise security protocols, compliance standards, and modern digital
-                asset protection.</p>
-            <div class="interactive-badge">Start Learning</div>
-        </a>
 
-        <!-- Video 2 -->
-        <a href="ready2/final_presentation.mp4" class="video-card">
-            <div class="icon-box">
-                <i data-lucide="trending-down"></i>
+            <!-- Video 2 -->
+            <div class="video-card" onclick="startCourse('ready2/final_presentation.mp4')">
+                <span class="status-badge">Interactive</span>
+                <div class="icon-box">
+                    <i data-lucide="trending-down"></i>
+                </div>
+                <h2 class="video-title">Cost Function Optimization</h2>
+                <p class="video-desc">Master the mathematics of error reduction and gradient descent for
+                    high-performance
+                    machine learning models.</p>
+                <div class="interactive-badge">Watch Video</div>
             </div>
-            <h2 class="video-title">Cost Function Optimization</h2>
-            <p class="video-desc">Master the mathematics of error reduction and gradient descent for high-performance
-                machine learning models.</p>
-            <div class="interactive-badge">Watch Video</div>
-        </a>
 
-        <!-- Video 3 -->
-        <a href="ready3/final_presentation.mp4" class="video-card">
-            <div class="icon-box">
-                <i data-lucide="cpu"></i>
+            <!-- Video 3 -->
+            <div class="video-card" onclick="startCourse('ready3/final_presentation.mp4')">
+                <span class="status-badge">Interactive</span>
+                <div class="icon-box">
+                    <i data-lucide="cpu"></i>
+                </div>
+                <h2 class="video-title">Hyperparameter Optimization</h2>
+                <p class="video-desc">Advanced strategies for tuning models, including grid search, random search, and
+                    Bayesian optimization.</p>
+                <div class="interactive-badge">Watch Video</div>
             </div>
-            <h2 class="video-title">Hyperparameter Optimization</h2>
-            <p class="video-desc">Advanced strategies for tuning models, including grid search, random search, and
-                Bayesian optimization.</p>
-            <div class="interactive-badge">Watch Video</div>
-        </a>
-    </main>
+        </main>
+    </div>
+
+    <div id="player-view">
+        <div class="player-header">
+            <button class="back-btn" onclick="showLibrary()">
+                <i data-lucide="arrow-left"></i>
+                Back to Library
+            </button>
+            <div class="score-display">
+                <span class="score-badge">SCORE: <span id="current-score">0</span> pts</span>
+            </div>
+        </div>
+
+        <h2 id="active-video-title" style="margin-bottom: 2rem; font-size: 2rem;">Loading...</h2>
+
+        <div class="video-container">
+            <video id="course-player" controls preload="auto">
+                Your browser does not support the video tag.
+            </video>
+            <div id="result-overlay" class="result-overlay"></div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="quiz-modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i data-lucide="help-circle" size="40"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Quick Quiz</h3>
+            <p id="quiz-question" class="question-text">Question text goes here...</p>
+            <div class="quiz-btns">
+                <button class="quiz-btn true" onclick="submitAnswer(true)">TRUE</button>
+                <button class="quiz-btn false" onclick="submitAnswer(false)">FALSE</button>
+            </div>
+        </div>
+    </div>
 
     <footer style="margin-top: 5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
         <p>&copy; 2026 Interactive Learning Portal. All videos optimized for high-performance playback.</p>
@@ -62,6 +297,124 @@
 
     <script>
         lucide.createIcons();
+
+        const courseData = {
+            'ready1/final_presentation.mp4': {
+                title: "Security and Compliance",
+                questions: [
+                    { time: 300, text: "Security helps protect data and systems from unauthorized access, attacks, and threats.", answer: true, triggered: false },
+                    { time: 600, text: "Compliance means organizations must follow laws, regulations, and industry standards related to data protection.", answer: true, triggered: false },
+                    { time: 900, text: "Security and compliance are the same and have no differences.", answer: false, triggered: false }
+                ]
+            },
+            'ready2/final_presentation.mp4': {
+                title: "Cost Function Optimization",
+                questions: [
+                    { time: 300, text: "A cost function is used to measure the error between predicted values and actual values in a machine learning model.", answer: true, triggered: false },
+                    { time: 600, text: "If the value of the cost function is high, it means the model is making very accurate predictions.", answer: false, triggered: false },
+                    { time: 900, text: "The main goal of cost function optimization is to minimize the error made by the machine learning model.", answer: true, triggered: false }
+                ]
+            },
+            'ready3/final_presentation.mp4': {
+                title: "Hyperparameter Optimization",
+                questions: [
+                    { time: 300, text: "Hyperparameters are set before training the model.", answer: true, triggered: false },
+                    { time: 600, text: "Hyperparameters are automatically learned by the model during training.", answer: false, triggered: false },
+                    { time: 900, text: "Grid Search is a method used for hyperparameter optimization.", answer: true, triggered: false }
+                ]
+            }
+        };
+
+        let activeCourse = null;
+        let score = 0;
+        let currentQuestion = null;
+
+        const player = document.getElementById('course-player');
+        const modal = document.getElementById('quiz-modal');
+        const overlay = document.getElementById('result-overlay');
+
+        function startCourse(videoSrc) {
+            activeCourse = courseData[videoSrc];
+            // Reset question triggers for this course if needed, but usually we want to keep state per session
+            // For now, let's just reset them so the user can re-watch and take quizzes again
+            activeCourse.questions.forEach(q => q.triggered = false);
+
+            document.getElementById('library-view').style.display = 'none';
+            document.getElementById('player-view').style.display = 'block';
+            document.getElementById('active-video-title').textContent = activeCourse.title;
+
+            player.src = videoSrc;
+            player.play();
+            updateScoreDisplay();
+        }
+
+        function showLibrary() {
+            player.pause();
+            document.getElementById('library-view').style.display = 'block';
+            document.getElementById('player-view').style.display = 'none';
+        }
+
+        player.addEventListener('timeupdate', () => {
+            if (!activeCourse) return;
+
+            const currentTime = Math.floor(player.currentTime);
+            const question = activeCourse.questions.find(q => q.time === currentTime && !q.triggered);
+
+            if (question) {
+                player.pause();
+                // Ensure player doesn't seek forward while modal is open
+                if (player.requestPointerLock) {
+                    // Could potentially lock focus, but standard pause is enough for this requirement
+                }
+
+                question.triggered = true;
+                currentQuestion = question;
+                showQuiz(question.text);
+            }
+        });
+
+        function showQuiz(text) {
+            document.getElementById('quiz-question').textContent = text;
+            modal.style.display = 'flex';
+        }
+
+        function submitAnswer(userAnswer) {
+            modal.style.display = 'none';
+            const isCorrect = userAnswer === currentQuestion.answer;
+
+            if (isCorrect) {
+                score += 10;
+                showResult("Congratulations!", "#00ff88");
+            } else {
+                showResult("Better luck next time!", "#ff4d4d");
+            }
+
+            updateScoreDisplay();
+            player.play();
+        }
+
+        function showResult(msg, color) {
+            overlay.textContent = msg;
+            overlay.style.backgroundColor = color === "#00ff88" ? "rgba(0, 255, 136, 0.2)" : "rgba(255, 77, 77, 0.2)";
+            overlay.style.border = `2px solid ${color}`;
+            overlay.style.color = color;
+            overlay.style.display = 'block';
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 2000);
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('current-score').textContent = score;
+        }
+
+        // Prevent closing modal with Escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 
