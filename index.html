@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Course Showcase</title>
+    <link rel="stylesheet" href="gallery.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Course Library</h1>
+        <p class="subtitle">Experience immersive learning with interactive quizzes and high-fidelity video
+            presentations.</p>
+    </header>
+
+    <main class="video-grid">
+        <!-- Video 1 -->
+        <a href="ready1/final_presentation.mp4" class="video-card">
+            <span class="status-badge">Interactive</span>
+            <div class="icon-box">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <h2 class="video-title">Security and Compliance</h2>
+            <p class="video-desc">Deep dive into enterprise security protocols, compliance standards, and modern digital
+                asset protection.</p>
+            <div class="interactive-badge">Start Learning</div>
+        </a>
+
+        <!-- Video 2 -->
+        <a href="ready2/final_presentation.mp4" class="video-card">
+            <div class="icon-box">
+                <i data-lucide="trending-down"></i>
+            </div>
+            <h2 class="video-title">Cost Function Optimization</h2>
+            <p class="video-desc">Master the mathematics of error reduction and gradient descent for high-performance
+                machine learning models.</p>
+            <div class="interactive-badge">Watch Video</div>
+        </a>
+
+        <!-- Video 3 -->
+        <a href="ready3/final_presentation.mp4" class="video-card">
+            <div class="icon-box">
+                <i data-lucide="cpu"></i>
+            </div>
+            <h2 class="video-title">Hyperparameter Optimization</h2>
+            <p class="video-desc">Advanced strategies for tuning models, including grid search, random search, and
+                Bayesian optimization.</p>
+            <div class="interactive-badge">Watch Video</div>
+        </a>
+    </main>
+
+    <footer style="margin-top: 5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <p>&copy; 2026 Interactive Learning Portal. All videos optimized for high-performance playback.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
