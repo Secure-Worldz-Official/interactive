@@ -221,6 +221,25 @@
                 opacity: 0;
             }
         }
+
+        /* Prevent Seek Bar Interaction */
+        video::-webkit-media-controls-timeline {
+            display: none !important;
+        }
+
+        video::-webkit-media-controls-current-time-display,
+        video::-webkit-media-controls-time-remaining-display {
+            display: none !important;
+        }
+
+        .video-container video {
+            pointer-events: none;
+            /* Disables clicking on video to play/pause/seek */
+        }
+
+        .video-container {
+            cursor: default;
+        }
     </style>
 </head>
 
@@ -287,8 +306,9 @@
 
         <h2 id="active-video-title" style="margin-bottom: 2rem; font-size: 2rem;">Loading...</h2>
 
-        <div class="video-container">
-            <video id="course-player" controls preload="auto">
+        <div class="video-container" onclick="togglePlay()">
+            <video id="course-player" controls preload="auto" disablePictureInPicture
+                controlsList="nodownload noplaybackrate">
                 Your browser does not support the video tag.
             </video>
             <div id="result-overlay" class="result-overlay"></div>
@@ -434,6 +454,29 @@
             document.getElementById('current-score').textContent = score;
         }
 
+        // Play/Pause toggle for container since video pointer-events are disabled
+        function togglePlay() {
+            if (modal.style.display === 'flex') return;
+            if (player.paused) player.play();
+            else player.pause();
+        }
+
+        // Seek Prevention Logic
+        let lastTime = 0;
+        player.addEventListener('timeupdate', () => {
+            if (!player.seeking) {
+                lastTime = player.currentTime;
+            }
+        });
+
+        player.addEventListener('seeking', () => {
+            const delta = player.currentTime - lastTime;
+            // If jump is more than 2 seconds (buffer for normal playback drift), snap back
+            if (Math.abs(delta) > 2) {
+                player.currentTime = lastTime;
+            }
+        });
+
         // Force pause when modal is open to prevent bypassing
         player.addEventListener('play', () => {
             if (modal.style.display === 'flex') {
@@ -441,10 +484,18 @@
             }
         });
 
-        // Prevent closing modal with Escape to ensure interaction
+        // Prevent closing modal or seeking with physical keys
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.style.display === 'flex') {
+            if (modal.style.display === 'flex' && e.key === 'Escape') {
                 e.preventDefault();
+            }
+
+            // Block Arrow Keys, Space (if handled by browser controls), J, L, etc (common shortcuts)
+            const blockedKeys = ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'KeyJ', 'KeyL'];
+            if (blockedKeys.includes(e.code) || (e.code === 'ArrowRight' || e.code === 'ArrowLeft')) {
+                if (document.activeElement === player || document.activeElement === document.body) {
+                    e.preventDefault();
+                }
             }
         });
     </script>
